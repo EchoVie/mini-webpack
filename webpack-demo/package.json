@@ -1,0 +1,12 @@
+{
+  "name": "mini-webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node run.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

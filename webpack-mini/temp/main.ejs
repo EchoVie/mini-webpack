@@ -1,0 +1,103 @@
+(function(modules) {
+  // 缓存的模块
+  let installedModules = {};
+
+  // 定义一个require方法来替换 import require 加载操作
+  function __webpack_require__(moduleId) {
+    // 1. 如果命中缓存
+    if (installedModules[moduleId]) {
+      return installedModules[moduleId].exports;
+    }
+    
+    // 2. 如果没有命中缓存
+    const module = installedModules[moduleId] = {
+      i: moduleId,
+      l: false,
+      exports: {}
+    }
+
+    // 2.1 调用当前 moduleId 对应的函数，然后完成内容的加载
+    modules[moduleId].call(module.exports, module, module.exports, __webpack_require__)
+
+    // 2.2 当上述的方法调用完成后，我们就可以修改 l 的值，表示当前模块内容已经加载完成了
+    module.l = true;
+
+    // 2.3 加载工作完成之后，要将拿出来的内容返回值调用的位置
+    return module.exports;
+  }
+
+  __webpack_require__.m = modules;
+  __webpack_require__.c = installedModules;
+
+  // 判断对象是否存在某个属性
+  __webpack_require__.o = function(object, property) {
+    return Object.propotype.hasOwnProperty(object, property);
+  }
+  // exports上不存在name 则新增
+  __webpack_require__.d = function(exports, name, getter) {
+    if (!__webpack_require__.o(exports, name)) {
+      Object.defineProperty(exports, name, { enumerable: true, get: getter })
+    }
+  }
+  __webpack_require__.r = function(exports) {
+    // 更改类型为 '[object Module]'
+    if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+      Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' })
+    }
+
+    // exports.__esModule = true
+    Object.defineProperty(exports, '__esModule', { value: true })
+  }
+  __webpack_require__.n = function(module) {
+    let getter = module && module.__esModule
+      ? function getDefault() {
+          return module['default']
+        }
+      : function getModulExports() {
+          return module
+        }
+    // getter对象增加属性a 值为 getter
+    __webpack_require__.d(getter, 'a', getter);
+
+    return getter
+  }
+  __webpack_require__.t = function (value, mode) {
+    if (module & 1) {
+      value = __webpack_require__(value)
+    }
+    if (mode & 8) {
+      return value
+    }
+    if ((mode & 4) && typeof value === 'object' && value.__esModule) {
+      return value
+    }
+
+    // 如果 8 和 4 都没有成立则需要自定义 ns 来通过 default 属性返回内容
+    let ns = Object.create(null)
+    __webpack_require__.r(ns) // ns.__esModule 为true
+
+    if (mode & 2 && typeof value !== 'string') {
+      for (let key in value) {
+        // value 的值 复制到 ns上
+        __webpack_require__.d(ns, key, function (key) {
+          return value[key]
+        }.bind(null, key))
+      }
+    }
+
+    return ns
+  }
+  // 定义 P 属性，用于保存资源访问路径
+  __webpack_require__.p = '';
+
+  // 调用 __webpack_require__ 方法执行模块导入与加载操作
+  return __webpack_require__(__webpack_require__.s = '<%-entryModuleId%>')
+})({
+  // 循环modules 生成key为moduleId，value为模块内容
+  <%for(let module of modules) {%>
+    "<%-module.moduleId%>":
+      (function (module, exports, __webpack_require__) {
+        <%-module._source%>
+      }),
+  <%}%>
+})
